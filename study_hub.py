@@ -64,7 +64,7 @@ st.subheader("Your colorful space for learning, practice and growth ✨")
 st.sidebar.title("📌 Navigation")
 page = st.sidebar.radio("Go to:", [
     "🏠 Home","📚 Subjects","📝 To-Do List","🕒 Focus Timer","🎯 Goals",
-    "🧠 Quiz","🏆 Progress & Badges","🌍 Language Learning","🔗 Useful Links",
+   "🏆 Progress & Badges","🌍 Language Learning","🔗 Useful Links",
     "⚙️ Tools","🎬 Streaming"
 ])
 
@@ -130,6 +130,8 @@ elif page == "📝 To-Do List":
         st.info("📝 Your to-do list is empty.")
 
 # =========================================================
+# FOCUS TIMER
+# =========================================================
 elif page == "🕒 Focus Timer":
     st.header("🕒 Focus Timer")
     mode = st.radio("Choose mode:", ["Custom Minutes", "Pomodoro (25+5)"])
@@ -147,27 +149,25 @@ elif page == "🕒 Focus Timer":
         st.session_state.focus_minutes += minutes
 
         progress = st.progress(0)
-        countdown_text = st.empty()  # placeholder for live countdown
+        countdown_text = st.empty()
 
         total_seconds = minutes * 60
-        for sec in range(total_seconds, 0, -1):  # reverse loop
+        for sec in range(total_seconds, 0, -1):
             mins, secs = divmod(sec, 60)
             countdown_text.markdown(f"⏱ **Time left: {mins:02d}:{secs:02d}**")
             progress.progress((total_seconds - sec + 1) / total_seconds)
-            time.sleep(1)  # real countdown
+            time.sleep(1)
 
         st.success("⏰ Focus session complete!")
         if break_time > 0:
             st.info(f"☕ Take a {break_time} min break!")
 
-        # Badges
         if minutes >= 30 and "🔥 Focus Hero" not in st.session_state.badges:
             st.session_state.badges.append("🔥 Focus Hero")
         if st.session_state.focus_minutes >= 100 and "🌟 Focus Legend" not in st.session_state.badges:
             st.session_state.badges.append("🌟 Focus Legend")
 
         save_data()
-
 
 # =========================================================
 # GOALS
@@ -189,78 +189,11 @@ elif page == "🎯 Goals":
     else:
         st.info("🎯 No goals added yet.")
 
-# =========================================================
-# QUIZ
-# =========================================================
-elif page == "🧠 Quiz":
-    st.header("🧠 Quick Quiz")
-    questions = [
-    # Maths
-    {"question":"What is 12 × 8?","options":["96","108","88","100"],"answer":"96"},
-    {"question":"Square root of 144 is?","options":["10","11","12","14"],"answer":"12"},
-    {"question":"Solve: 25 ÷ 5","options":["4","5","6","7"],"answer":"5"},
-    {"question":"What is 15% of 200?","options":["20","25","30","35"],"answer":"30"},
-    {"question":"Value of π (approx)?","options":["2.14","3.14","4.14","5.14"],"answer":"3.14"},
-    {"question":"Area of square with side 6?","options":["36","30","24","40"],"answer":"36"},
-
-    # Islamic
-    {"question":"How many Rakats in Fajr prayer?","options":["2","4","6","8"],"answer":"2"},
-    {"question":"Which Prophet built the Kaaba?","options":["Musa (AS)","Ibrahim (AS)","Isa (AS)","Nuh (AS)"],"answer":"Ibrahim (AS)"},
-    {"question":"First month of Islamic calendar?","options":["Ramadan","Muharram","Shawwal","Safar"],"answer":"Muharram"},
-    {"question":"How many Surahs in Qur’an?","options":["114","112","110","116"],"answer":"114"},
-    {"question":"Which city is called City of Prophets?","options":["Makkah","Madinah","Jerusalem","Baghdad"],"answer":"Jerusalem"},
-    {"question":"Zakat is obligatory on?","options":["Gold","Silver","Money","All"],"answer":"All"},
-
-    # General Knowledge
-    {"question":"Capital of Turkey?","options":["Istanbul","Ankara","Izmir","Bursa"],"answer":"Ankara"},
-    {"question":"Largest ocean in the world?","options":["Atlantic","Indian","Pacific","Arctic"],"answer":"Pacific"},
-    {"question":"Who invented the light bulb?","options":["Tesla","Edison","Einstein","Newton"],"answer":"Edison"},
-    {"question":"Which country is called Land of Rising Sun?","options":["China","Japan","Korea","Thailand"],"answer":"Japan"},
-    {"question":"Fastest land animal?","options":["Tiger","Horse","Cheetah","Lion"],"answer":"Cheetah"},
-    {"question":"National flower of Pakistan?","options":["Rose","Tulip","Jasmine","Sunflower"],"answer":"Jasmine"},
-
-    # Science
-    {"question":"Which gas do plants release during photosynthesis?","options":["Oxygen","Carbon dioxide","Nitrogen","Hydrogen"],"answer":"Oxygen"},
-    {"question":"Human body has how many bones?","options":["206","208","210","212"],"answer":"206"},
-    {"question":"Which planet is known as Red Planet?","options":["Earth","Mars","Jupiter","Venus"],"answer":"Mars"},
-    {"question":"Boiling point of water (°C)?","options":["90","95","100","105"],"answer":"100"},
-    {"question":"Smallest unit of matter?","options":["Atom","Molecule","Cell","Proton"],"answer":"Atom"},
-    {"question":"Which vitamin is produced by sunlight?","options":["A","B","C","D"],"answer":"D"},
-
-    # Computer
-    {"question":"Shortcut for copy in Windows?","options":["Ctrl+X","Ctrl+C","Ctrl+V","Ctrl+Z"],"answer":"Ctrl+C"},
-    {"question":"Brain of computer is?","options":["RAM","CPU","Hard Disk","Monitor"],"answer":"CPU"},
-    {"question":"Which company created Windows OS?","options":["Apple","Microsoft","Google","IBM"],"answer":"Microsoft"},
-    {"question":"Binary system uses which digits?","options":["0 and 1","1 and 2","2 and 3","3 and 4"],"answer":"0 and 1"},
-    {"question":"Full form of HTML?","options":["Hyper Text Markup Language","High Tech Machine Language","Hyper Transfer Main Link","None"],"answer":"Hyper Text Markup Language"},
-    {"question":"Which device is output device?","options":["Keyboard","Mouse","Printer","Scanner"],"answer":"Printer"}
-]
-
-
-    q = random.choice(questions)
-    st.write(f"### ❓ {q['question']}")
-    answer = st.radio("Choose your answer:", q["options"])
-    if st.button("✅ Submit Answer"):
-        st.session_state.quiz_attempts += 1
-        if answer == q["answer"]:
-            st.session_state.quiz_score += 1
-            st.success("🎉 Correct answer!")
-            if "🧠 Quiz Master" not in st.session_state.badges:
-                st.session_state.badges.append("🧠 Quiz Master")
-        else:
-            st.error(f"❌ Wrong! Correct answer is {q['answer']}.")
-        save_data()
-    st.info(f"🏆 Score: {st.session_state.quiz_score} / {st.session_state.quiz_attempts}")
-
-# =========================================================
-# PROGRESS & BADGES
-# =========================================================
 elif page == "🏆 Progress & Badges":
     st.header("🏆 My Progress")
-    col1, col2, col3 = st.columns(3)
+    col1,col2 = st.columns(2)
     with col1: st.metric("⏱ Focus Minutes", st.session_state.focus_minutes)
-    with col2: st.metric("🧠 Quiz Score", st.session_state.quiz_score)
-    with col3: st.metric("🎯 Goals", len(st.session_state.goals))
+    with col2: st.metric("🎯 Goals", len(st.session_state.goals))
     st.markdown("---")
     st.subheader("🏅 My Badges")
     if st.session_state.badges:
@@ -287,14 +220,9 @@ elif page == "🔗 Useful Links":
     st.markdown("📖 [Khan Academy](https://www.khanacademy.org)")
     st.markdown("📚 [Wikipedia](https://www.wikipedia.org)")
     st.markdown("🎓 [Google Scholar](https://scholar.google.com)")
-    st.markdown("💻 [W3Schools](https://www.w3schools.com)")
-
-# =========================================================
-# TOOLS
-# =========================================================
 elif page == "⚙️ Tools":
     st.header("⚙️ Quick Tools")
-    choice = st.selectbox("Choose a tool:", ["Calculator","Quote"])
+    choice = st.selectbox("Choose a tool:", ["Calculator","Today's Quote"])  # <-- yahan choice define ho raha hai
 
     if choice == "Calculator":
         st.subheader("🧮 Calculator")
@@ -311,7 +239,22 @@ elif page == "⚙️ Tools":
                     result = None
                 else:
                     result = num1 / num2
-            if result is not None: st.success(f"🎯 Result: {result}")
+            if result is not None:
+                st.success(f"🎯 Result: {round(result, 4)}")  # short result
+
+    elif choice == "Today's Quote":
+        st.subheader("💜 Study Motivation")
+        quotes = [
+            "Education is the passport to the future. – Malcolm X",
+            "The expert in anything was once a beginner.",
+            "Success is the sum of small efforts repeated daily.",
+            "Dream big, work hard, stay focused.",
+            "Learning never exhausts the mind. – Leonardo da Vinci",
+            "Believe in yourself and keep going! 🌟"
+        ]
+        st.info(random.choice(quotes))
+
+
 
     elif choice == "Today's Quote":
         st.subheader("💜 Study Motivation")
@@ -338,6 +281,7 @@ elif page == "🎬 Streaming":
 # =========================================================
 st.markdown("---")
 st.markdown(
-    "<p style='text-align:center; color:#888;'>Made with 💜 for students | StudySpace 🎓</p>",
+    "<p style='text-align:center; color:#888;'>Made with 💜 for students by Abiha Kashif| StudySpace 🎓</p>",
     unsafe_allow_html=True
 )
+
